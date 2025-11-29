@@ -10,7 +10,7 @@ $u = Auth::user();
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= htmlspecialchars($config['app_name'] ?? 'Package Forwarding') ?></title>
-<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="/public/css/styles.css">
 </head>
 <body>
 <header class="topbar">
