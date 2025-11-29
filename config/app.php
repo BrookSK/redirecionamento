@@ -1,13 +1,27 @@
 <?php
 $env = getenv('APP_ENV') ?: 'dev';
 
-// Permite override explícito do caminho via variável de ambiente DB_PATH
-$defaultDbPaths = [
-    'dev' => (defined('BASE_PATH') ? BASE_PATH : dirname(__DIR__)) . '/storage/database.sqlite',
-    'prod' => (defined('BASE_PATH') ? BASE_PATH : dirname(__DIR__)) . '/storage/database.prod.sqlite',
-    'test' => (defined('BASE_PATH') ? BASE_PATH : dirname(__DIR__)) . '/storage/database.test.sqlite',
+// Configurações de banco por ambiente (MySQL)
+$dbConfigs = [
+    'dev' => [
+        'driver'   => 'mysql',
+        'host'     => 'localhost',
+        'database' => 'red_braz_dev',
+        'username' => 'red_braz_dev',
+        'password' => '_Mtyz&mw55dAM9it',
+        'charset'  => 'utf8mb4',
+    ],
+    'test' => [
+        'driver'   => 'mysql',
+        'host'     => 'localhost',
+        'database' => 'red_braz_dev',
+        'username' => 'red_braz_dev',
+        'password' => '_Mtyz&mw55dAM9it',
+        'charset'  => 'utf8mb4',
+    ],
 ];
-$dbPath = getenv('DB_PATH') ?: ($defaultDbPaths[$env] ?? $defaultDbPaths['dev']);
+
+$dbConfig = $dbConfigs[$env] ?? $dbConfigs['dev'];
 
 return [
     'app_name' => 'Package Forwarding',
@@ -21,9 +35,6 @@ return [
         'USD_BRL' => 5.00,
         'BRL_USD' => 0.20
     ],
-    'db' => [
-        'driver' => 'sqlite',
-        'database' => $dbPath,
-    ],
+    'db' => $dbConfig,
     'base_url' => '/',
 ];

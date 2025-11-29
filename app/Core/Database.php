@@ -8,10 +8,26 @@ class Database {
 
     public static function init(array $config): void {
         self::$config = $config;
-        $dsn = 'sqlite:' . $config['db']['database'];
-        self::$pdo = new PDO($dsn);
-        self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        self::$pdo->exec('PRAGMA foreign_keys = ON');
+        $db = $config['db'] ?? [];
+        $driver = $db['driver'] ?? 'sqlite';
+
+        if ($driver === 'mysql') {
+            $host    = $db['host']     ?? 'localhost';
+            $dbname  = $db['database'] ?? '';
+            $charset = $db['charset']  ?? 'utf8mb4';
+            $user    = $db['username'] ?? null;
+            $pass    = $db['password'] ?? null;
+
+            $dsn = "mysql:host={$host};dbname={$dbname};charset={$charset}";
+            self::$pdo = new PDO($dsn, $user, $pass);
+            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } else {
+            // Fallback para SQLite (modo atual de desenvolvimento)
+            $dsn = 'sqlite:' . ($db['database'] ?? '');
+            self::$pdo = new PDO($dsn);
+            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$pdo->exec('PRAGMA foreign_keys = ON');
+        }
     }
 
     public static function pdo(): PDO { return self::$pdo; }

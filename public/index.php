@@ -35,13 +35,16 @@ use App\Controllers\CheckoutController;
 if (!is_dir(BASE_PATH.'/storage')) {
     mkdir(BASE_PATH.'/storage', 0777, true);
 }
-if (!file_exists($config['db']['database'])) {
-    touch($config['db']['database']);
-}
 
 Database::init($config);
-Migrator::run();
-Seeder::run();
+// Apenas em SQLite criamos arquivo e rodamos migrações/seed automáticos
+if (Database::driver() === 'sqlite') {
+    if (!file_exists($config['db']['database'])) {
+        touch($config['db']['database']);
+    }
+    Migrator::run();
+    Seeder::run();
+}
 
 $router = new Router($config);
 
