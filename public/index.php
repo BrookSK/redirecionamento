@@ -77,4 +77,14 @@ $router->post('/cart/update', [CartController::class, 'update']);
 $router->get('/checkout', [CheckoutController::class, 'viewCheckout']);
 $router->post('/checkout/process', [CheckoutController::class, 'processPayment']);
 
-$router->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Normaliza acessos que incluam "/public" no caminho, ex: /public/ ou /public/login
+if (strpos($path, '/public') === 0) {
+    $path = substr($path, strlen('/public'));
+    if ($path === '' || $path === false) {
+        $path = '/';
+    }
+}
+
+$router->dispatch($_SERVER['REQUEST_METHOD'], $path);
