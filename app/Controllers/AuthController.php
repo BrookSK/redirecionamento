@@ -8,12 +8,7 @@ use App\Core\Logger;
 
 class AuthController extends Controller {
     public function home(): void {
-        if (Auth::check()) {
-            $u = Auth::user();
-            $this->redirect($u['role']==='admin' ? '/admin/dashboard' : '/client/dashboard');
-        } else {
-            $this->redirect('/login');
-        }
+        $this->view('home');
     }
     public function showLogin(): void {
         if (Auth::check()) { $this->redirect('/'); }
