@@ -19,6 +19,7 @@ $u = Auth::user();
     <?php if ($u && $u['role']==='admin'): ?>
       <a href="/admin/dashboard">Dashboard</a>
       <a href="/admin/packages">Pacotes</a>
+      <a href="/admin/clients">Clientes</a>
       <a href="/logout"><?= Translation::t('logout') ?></a>
     <?php elseif ($u && $u['role']==='client'): ?>
       <a href="/client/dashboard">Dashboard</a>
@@ -30,12 +31,6 @@ $u = Auth::user();
       <a href="/login">Login</a>
     <?php endif; ?>
   </nav>
-  <div class="i18n">
-    <a href="/lang/pt_BR">PT</a> | <a href="/lang/en_US">EN</a>
-    <?php if ($u && $u['role']==='client'): ?>
-      | <a href="/currency/BRL">BRL</a> / <a href="/currency/USD">USD</a>
-    <?php endif; ?>
-  </div>
 </header>
 <main class="container">
   <?php include $viewFile; ?>
