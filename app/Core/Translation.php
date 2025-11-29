@@ -7,7 +7,8 @@ class Translation {
         $pdo = Database::pdo();
         $locale = $_SESSION['locale'] ?? 'pt_BR';
         $col = $locale === 'en_US' ? 'en_us' : 'pt_br';
-        $stmt = $pdo->prepare("SELECT $col FROM translations WHERE key = ?");
+        // `key` é palavra reservada em MySQL, por isso usamos crases
+        $stmt = $pdo->prepare("SELECT `$col` FROM translations WHERE `key` = ?");
         $stmt->execute([$key]);
         $v = $stmt->fetchColumn();
         return $v !== false && $v !== null && $v !== '' ? $v : $key;
