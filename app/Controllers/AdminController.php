@@ -16,6 +16,13 @@ class AdminController extends Controller {
         $newUsers = (int)$pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
         $this->view('admin/dashboard', compact('pending','recentOrders','newUsers'));
     }
+    public function listClients(): void {
+        Auth::requireRole('admin');
+        $pdo = Database::pdo();
+        $stmt = $pdo->query("SELECT id,name,email,role,suite_number FROM users ORDER BY id DESC");
+        $clients = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $this->view('admin/clients', compact('clients'));
+    }
     public function listPackages(): void {
         Auth::requireRole('admin');
         $filters = [

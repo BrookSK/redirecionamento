@@ -63,6 +63,8 @@ $router->post('/admin/packages/create', [AdminController::class, 'storePackage']
 $router->get('/admin/packages/edit/{id}', [AdminController::class, 'editPackage']);
 $router->post('/admin/packages/edit/{id}', [AdminController::class, 'updatePackage']);
 
+$router->get('/admin/clients', [AdminController::class, 'listClients']);
+
 $router->get('/admin/settings/taxes', [AdminController::class, 'taxSettings']);
 $router->get('/admin/settings/taxes/create', [AdminController::class, 'createTax']);
 $router->post('/admin/settings/taxes/create', [AdminController::class, 'storeTax']);
