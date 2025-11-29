@@ -87,4 +87,9 @@ if (strpos($path, '/public') === 0) {
     }
 }
 
+// Remove barra final opcional (exceto da raiz), ex.: /login/ -> /login
+if ($path !== '/' && substr($path, -1) === '/') {
+    $path = rtrim($path, '/');
+}
+
 $router->dispatch($_SERVER['REQUEST_METHOD'], $path);
