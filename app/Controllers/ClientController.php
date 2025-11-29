@@ -6,7 +6,7 @@ use App\Core\Database;
 
 class ClientController extends Controller {
     public function dashboard(): void {
-        Auth::requireRole('client');
+        Auth::requireRole(['client','admin']);
         $u = Auth::user();
         $pdo = Database::pdo();
         $stmt = $pdo->prepare("SELECT * FROM packages WHERE suite_number = ? AND (status = 'Pendente' OR status IS NULL) ORDER BY id DESC");
@@ -15,7 +15,7 @@ class ClientController extends Controller {
         $this->view('client/dashboard', ['user'=>$u, 'packages'=>$packages]);
     }
     public function listOrders(): void {
-        Auth::requireRole('client');
+        Auth::requireRole(['client','admin']);
         $u = Auth::user();
         $pdo = Database::pdo();
         $stmt = $pdo->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC");
@@ -24,7 +24,7 @@ class ClientController extends Controller {
         $this->view('client/orders', compact('orders','u'));
     }
     public function switchCurrency(array $params): void {
-        Auth::requireLogin();
+        Auth::requireRole(['client','admin']);
         $code = strtoupper($params['code'] ?? 'BRL');
         if (!in_array($code, ['BRL','USD'])) $code = 'BRL';
         $pdo = Database::pdo();

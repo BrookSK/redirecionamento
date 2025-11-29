@@ -23,7 +23,7 @@ class CartController extends Controller {
         }
     }
     public function viewCart(): void {
-        Auth::requireRole('client');
+        Auth::requireRole(['client','admin']);
         $this->sync();
         $u = Auth::user();
         $pdo = Database::pdo();
@@ -33,7 +33,7 @@ class CartController extends Controller {
         $this->view('cart', compact('items','u'));
     }
     public function update(): void {
-        Auth::requireRole('client');
+        Auth::requireRole(['client','admin']);
         $u = Auth::user();
         $pdo = Database::pdo();
         CSRF::validate($_POST['_csrf'] ?? null);

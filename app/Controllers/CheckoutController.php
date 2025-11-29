@@ -34,7 +34,7 @@ class CheckoutController extends Controller {
     }
 
     public function viewCheckout(): void {
-        Auth::requireRole('client');
+        Auth::requireRole(['client','admin']);
         $u = Auth::user();
         $currency = $u['preferred_currency'] ?? 'BRL';
         $t = $this->totals((int)$u['id'], $currency);
@@ -42,7 +42,7 @@ class CheckoutController extends Controller {
     }
 
     public function processPayment(): void {
-        Auth::requireRole('client');
+        Auth::requireRole(['client','admin']);
         $u = Auth::user();
         CSRF::validate($_POST['_csrf'] ?? null);
         $payCurrency = $_POST['currency'] ?? ($u['preferred_currency'] ?? 'BRL');

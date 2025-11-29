@@ -30,10 +30,11 @@ class Auth {
     public static function requireLogin(): void {
         if (!self::check()) { header('Location: /login'); exit; }
     }
-    public static function requireRole(string $role): void {
+    public static function requireRole($role): void {
         self::requireLogin();
         $u = self::user();
-        if (!$u || $u['role'] !== $role) {
+        $roles = is_array($role) ? $role : [$role];
+        if (!$u || !in_array($u['role'], $roles, true)) {
             header('Location: /'); exit;
         }
     }
