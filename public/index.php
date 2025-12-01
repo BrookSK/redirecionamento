@@ -64,6 +64,10 @@ $router->get('/admin/packages/edit/{id}', [AdminController::class, 'editPackage'
 $router->post('/admin/packages/edit/{id}', [AdminController::class, 'updatePackage']);
 
 $router->get('/admin/clients', [AdminController::class, 'listClients']);
+$router->get('/admin/clients/create', [AdminController::class, 'createClient']);
+$router->post('/admin/clients/create', [AdminController::class, 'storeClient']);
+$router->get('/admin/clients/import', [AdminController::class, 'showImportClients']);
+$router->post('/admin/clients/import', [AdminController::class, 'importClients']);
 
 $router->get('/admin/settings/taxes', [AdminController::class, 'taxSettings']);
 $router->get('/admin/settings/taxes/create', [AdminController::class, 'createTax']);

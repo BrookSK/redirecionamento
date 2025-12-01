@@ -23,6 +23,74 @@ class AdminController extends Controller {
         $clients = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $this->view('admin/clients', compact('clients'));
     }
+    public function createClient(): void {
+        Auth::requireRole('admin');
+        $this->view('admin/create_client');
+    }
+    public function storeClient(): void {
+        Auth::requireRole('admin');
+        CSRF::validate($_POST['_csrf'] ?? null);
+        $pdo = Database::pdo();
+        $name = trim($_POST['name'] ?? '');
+        $lastName = trim($_POST['last_name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $suite = trim($_POST['suite_number'] ?? '');
+        $password = $_POST['password'] ?? '';
+        if ($name === '' || $email === '' || $suite === '' || $password === '') {
+            $this->view('admin/create_client', ['error' => 'Preencha nome, e-mail, suite e senha']);
+            return;
+        }
+        $exists = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+        $exists->execute([$email]);
+        if ((int)$exists->fetchColumn() > 0) {
+            $this->view('admin/create_client', ['error' => 'E-mail já cadastrado']);
+            return;
+        }
+        $stmt = $pdo->prepare("INSERT INTO users(name,last_name,email,password,role,suite_number,preferred_currency,billing_street,billing_number,billing_neighborhood,billing_city,billing_state,billing_country,billing_complement,billing_zip,billing_phone,shipping_street,shipping_number,shipping_neighborhood,shipping_city,shipping_state,shipping_country,shipping_complement,shipping_zip,shipping_phone,cpf,birth_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $birth = $_POST['birth_date'] ?? null;
+        if ($birth === '') $birth = null;
+        $stmt->execute([
+            $name,
+            $lastName,
+            $email,
+            password_hash($password, PASSWORD_DEFAULT),
+            'client',
+            $suite,
+            'BRL',
+            $_POST['billing_street'] ?? null,
+            $_POST['billing_number'] ?? null,
+            $_POST['billing_neighborhood'] ?? null,
+            $_POST['billing_city'] ?? null,
+            $_POST['billing_state'] ?? null,
+            $_POST['billing_country'] ?? null,
+            $_POST['billing_complement'] ?? null,
+            $_POST['billing_zip'] ?? null,
+            $_POST['billing_phone'] ?? null,
+            $_POST['shipping_street'] ?? null,
+            $_POST['shipping_number'] ?? null,
+            $_POST['shipping_neighborhood'] ?? null,
+            $_POST['shipping_city'] ?? null,
+            $_POST['shipping_state'] ?? null,
+            $_POST['shipping_country'] ?? null,
+            $_POST['shipping_complement'] ?? null,
+            $_POST['shipping_zip'] ?? null,
+            $_POST['shipping_phone'] ?? null,
+            $_POST['cpf'] ?? null,
+            $birth,
+        ]);
+        Logger::info('admin_client_created', ['email' => $email, 'suite' => $suite]);
+        $this->redirect('/admin/clients');
+    }
+    public function showImportClients(): void {
+        Auth::requireRole('admin');
+        $this->view('admin/import_clients');
+    }
+    public function importClients(): void {
+        Auth::requireRole('admin');
+        CSRF::validate($_POST['_csrf'] ?? null);
+        // Implementação detalhada da importação CSV será feita após definirmos formato e regra de senha
+        $this->view('admin/import_clients', ['error' => 'Importação CSV ainda não implementada completamente.']);
+    }
     public function listPackages(): void {
         Auth::requireRole('admin');
         $filters = [
